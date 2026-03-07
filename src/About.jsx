@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Clapperboard, Code2, Film, Heart, Mail, MessageCircle, Search, Smartphone, Star, Video } from "lucide-react";
+import { ArrowLeft, Clapperboard, Film, Heart, Mail, MessageCircle, Search, Smartphone, Star, Video } from "lucide-react";
 
 export default function About() {
   const navigate = useNavigate();
@@ -167,7 +167,20 @@ export default function About() {
             textAlign: "center",
             marginBottom: 60
           }}>
-          <div style={{ marginBottom: 20, display: "flex", justifyContent: "center" }}><Code2 size={60} /></div>
+          <div style={{ marginBottom: 20, display: "flex", justifyContent: "center" }}>
+            <img
+              src="/developer-profile.png"
+              alt="Photo du développeur"
+              style={{
+                width: 128,
+                height: 128,
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "3px solid rgba(229,9,20,0.7)",
+                boxShadow: "0 10px 30px rgba(229,9,20,0.35)"
+              }}
+            />
+          </div>
           <h2 style={{
             fontSize: 28, fontWeight: 700, marginBottom: 12
           }}>
