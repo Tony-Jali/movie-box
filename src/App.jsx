@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
+import { Clapperboard, Flame, Heart, Info, Play, Plus, Search, Star } from "lucide-react";
 
 const TMDB_API_KEY = "20ee1557500e8089a6d549f19b23014e";
 const SUPABASE_URL = "https://zuriegsqtshtcyiytftg.supabase.co";
@@ -220,8 +221,8 @@ export default function App() {
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
         />
         <div className="card-overlay">
-          <div style={{ fontSize: 12, color: "#46d369", fontWeight: 700, marginBottom: 3 }}>
-            ★ {movie.vote_average?.toFixed(1)}
+          <div style={{ fontSize: 12, color: "#46d369", fontWeight: 700, marginBottom: 3, display: "flex", alignItems: "center", gap: 4 }}>
+            <Star size={12} fill="currentColor" /> {movie.vote_average?.toFixed(1)}
           </div>
           <div style={{ fontSize: 12, fontWeight: 700, color: "white", lineHeight: 1.3, marginBottom: 6 }}>
             {movie.title}
@@ -233,7 +234,9 @@ export default function App() {
                 flex: 1, padding: "5px 0", background: "white", border: "none",
                 borderRadius: 3, color: "#141414", fontWeight: 700, fontSize: 11, cursor: "pointer"
               }}>
-              ▶ VOIR
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                <Play size={12} fill="currentColor" /> VOIR
+              </span>
             </button>
             <button
               onClick={handleAddFavorite}
@@ -245,7 +248,7 @@ export default function App() {
                 color: "white", fontSize: 13, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center"
               }}>
-              {isFavorite ? "❤" : "+"}
+              {isFavorite ? <Heart size={13} fill="currentColor" /> : <Plus size={13} />}
             </button>
           </div>
         </div>
@@ -301,7 +304,7 @@ export default function App() {
               <span
                 style={{ position: "absolute", left: 10, fontSize: 14, color: "rgba(255,255,255,0.6)", zIndex: 1, cursor: "pointer" }}
                 onClick={() => setShowSearch(!showSearch)}>
-                🔍
+                <Search size={14} />
               </span>
               <AnimatePresence>
                 {showSearch && (
@@ -408,7 +411,7 @@ export default function App() {
                   background: "#e50914", color: "white", fontSize: 11,
                   fontWeight: 700, padding: "3px 8px", borderRadius: 2, letterSpacing: 1
                 }}>TOP 10</span>
-                <span style={{ color: "#46d369", fontSize: 13, fontWeight: 700 }}>★ {banner.vote_average?.toFixed(1)}</span>
+                <span style={{ color: "#46d369", fontSize: 13, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 4 }}><Star size={13} fill="currentColor" /> {banner.vote_average?.toFixed(1)}</span>
                 <span style={{ color: "#b3b3b3", fontSize: 13 }}>
                   {banner.release_date?.substring(0, 4)}
                 </span>
@@ -442,7 +445,7 @@ export default function App() {
                     borderRadius: 4, color: "#141414", fontWeight: 700,
                     fontSize: 16, cursor: "pointer", letterSpacing: 0.5
                   }}>
-                  <span style={{ fontSize: 18 }}>▶</span> Lecture
+                  <Play size={18} fill="currentColor" /> Lecture
                 </motion.button>
                 <motion.button
                   whileHover={{ background: "rgba(109,109,110,0.7)" }}
@@ -456,7 +459,7 @@ export default function App() {
                     fontSize: 16, cursor: "pointer", letterSpacing: 0.5
                   }}
                   onClick={() => navigate(`/movie/${banner.id}`)}>
-                  <span style={{ fontSize: 18 }}>ⓘ</span> Plus d'infos
+                  <Info size={18} /> Plus d'infos
                 </motion.button>
               </div>
             </motion.div>
@@ -512,7 +515,7 @@ export default function App() {
                 fontSize: 20, fontWeight: 700, marginBottom: 14,
                 color: "white", letterSpacing: 0.5
               }}>
-                🔥 Trending Now
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Flame size={18} /> Trending Now</span>
               </h2>
               <div className="row-scroll">
                 {trending.map((movie) => (
@@ -533,10 +536,10 @@ export default function App() {
                 color: "white", letterSpacing: 0.5
               }}>
                 {searchResults.length > 0
-                  ? `🔍 Résultats pour "${searchQuery}"`
+                  ? <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Search size={18} /> {`Résultats pour "${searchQuery}"`}</span>
                   : isSearching
                   ? "Recherche..."
-                  : "🎬 " + rowLabel}
+                  : <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Clapperboard size={18} /> {rowLabel}</span>}
               </h2>
 
               {isSearching ? (

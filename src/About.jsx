@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ArrowLeft, Clapperboard, Code2, Film, Heart, Mail, MessageCircle, Search, Smartphone, Star, Video } from "lucide-react";
 
 export default function About() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ export default function About() {
             WebkitTextFillColor: "transparent",
             backgroundClip: "text"
           }}>
-          🎬 MOVIEBOX
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Clapperboard size={20} /> MOVIEBOX</span>
         </motion.div>
         <motion.button
           whileHover={{ background: "rgba(255,255,255,0.1)" }}
@@ -53,7 +54,7 @@ export default function About() {
             color: "#b3b3b3", padding: "8px 16px", borderRadius: 4,
             fontSize: 13, cursor: "pointer", fontWeight: 600
           }}>
-          ← Retour
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ArrowLeft size={14} /> Retour</span>
         </motion.button>
       </motion.div>
 
@@ -100,32 +101,32 @@ export default function About() {
           }}>
           {[
             {
-              icon: "🎬",
+              icon: Film,
               title: "Catalogue Complet",
               desc: "Accédez à des milliers de films populaires et tendance"
             },
             {
-              icon: "⭐",
+              icon: Star,
               title: "Notes & Critiques",
               desc: "Consultez les avis du public pour choisir vos films"
             },
             {
-              icon: "🎥",
+              icon: Video,
               title: "Trailers HD",
               desc: "Regardez les bandes-annonces en haute définition"
             },
             {
-              icon: "❤️",
+              icon: Heart,
               title: "Ma Liste",
               desc: "Sauvegardez vos films préférés pour plus tard"
             },
             {
-              icon: "🔍",
+              icon: Search,
               title: "Recherche Avancée",
               desc: "Trouvez rapidement le film que vous cherchez"
             },
             {
-              icon: "📱",
+              icon: Smartphone,
               title: "Responsive Design",
               desc: "Une expérience fluide sur tous vos appareils"
             }
@@ -139,8 +140,8 @@ export default function About() {
                 border: "1px solid rgba(229,9,20,0.2)",
                 transition: "all 0.3s ease"
               }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>
-                {feature.icon}
+              <div style={{ fontSize: 40, marginBottom: 12, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                <feature.icon size={36} />
               </div>
               <h3 style={{
                 fontSize: 16, fontWeight: 700, marginBottom: 8
@@ -166,7 +167,7 @@ export default function About() {
             textAlign: "center",
             marginBottom: 60
           }}>
-          <div style={{ fontSize: 60, marginBottom: 20 }}>👨‍💻</div>
+          <div style={{ marginBottom: 20, display: "flex", justifyContent: "center" }}><Code2 size={60} /></div>
           <h2 style={{
             fontSize: 28, fontWeight: 700, marginBottom: 12
           }}>
@@ -210,7 +211,7 @@ export default function About() {
                 cursor: "pointer", transition: "all 0.3s ease",
                 textDecoration: "none"
               }}>
-              <span style={{ fontSize: 20 }}>💬</span>
+              <MessageCircle size={18} />
               WhatsApp
             </motion.a>
 
@@ -225,7 +226,7 @@ export default function About() {
                 cursor: "pointer", transition: "all 0.3s ease",
                 textDecoration: "none"
               }}>
-              <span style={{ fontSize: 20 }}>✉️</span>
+              <Mail size={18} />
               Email
             </motion.a>
           </div>
@@ -290,7 +291,7 @@ export default function About() {
         }}>
         <p>
           © 2026 MovieBox — Données issues de TMDB API <br />
-          Développé avec ❤️ par Tony Jali
+          Développé avec passion par Tony Jali
         </p>
       </motion.div>
     </div>

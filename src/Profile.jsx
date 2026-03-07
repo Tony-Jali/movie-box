@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, BarChart3, Calendar, Clapperboard, Film, Heart, Play, Star, Trash2, Tv } from "lucide-react";
 
 const SUPABASE_URL = "https://zuriegsqtshtcyiytftg.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1cmllZ3NxdHNodGN5aXl0ZnRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MDU5NzAsImV4cCI6MjA4ODM4MTk3MH0.09K-bABDaXEUvhgaG1Q_e38JLlj-ZDVunRvAUcI7JHs";
@@ -214,7 +215,7 @@ export default function Profile() {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text"
             }}>
-            🎬 MOVIEBOX
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Clapperboard size={20} /> MOVIEBOX</span>
           </motion.div>
 
           {/* Nav Links */}
@@ -237,7 +238,7 @@ export default function Profile() {
                 fontSize: 13, cursor: "pointer", fontWeight: 600,
                 transition: "all 0.2s"
               }}>
-              ← Accueil
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ArrowLeft size={14} /> Accueil</span>
             </motion.button>
             <motion.button
               whileHover={{ background: "#c41006" }}
@@ -319,15 +320,15 @@ export default function Profile() {
             transition={{ delay: 0.3, duration: 0.5 }}
             style={{ padding: "0 4% 20px", display: "flex", gap: 12, flexWrap: "wrap" }}>
             {[
-              { id: "favorites", label: `📽️ Ma Liste (${parsedFavorites.length})` },
-              { id: "activity", label: "📊 Activité" }
+              { id: "favorites", label: `Ma Liste (${parsedFavorites.length})`, icon: Tv },
+              { id: "activity", label: "Activité", icon: BarChart3 }
             ].map(tab => (
               <motion.button
                 key={tab.id}
                 whileHover={{ y: -2 }}
                 className={`profile-tab ${activeTab === tab.id ? "active" : "inactive"}`}
                 onClick={() => setActiveTab(tab.id)}>
-                {tab.label}
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><tab.icon size={14} /> {tab.label}</span>
               </motion.button>
             ))}
           </motion.div>
@@ -371,7 +372,7 @@ export default function Profile() {
                       borderRadius: 12,
                       background: "linear-gradient(135deg, rgba(229,9,20,0.05), rgba(229,9,20,0.02))"
                     }}>
-                    <div style={{ fontSize: 64, marginBottom: 20 }}>🎬</div>
+                    <div style={{ marginBottom: 20, display: "flex", justifyContent: "center" }}><Clapperboard size={56} /></div>
                     <p style={{ fontSize: 24, color: "#b3b3b3", fontWeight: 700, marginBottom: 12 }}>
                       Votre liste est vide
                     </p>
@@ -390,7 +391,7 @@ export default function Profile() {
                         fontWeight: 700, fontSize: 16, cursor: "pointer",
                         boxShadow: "0 4px 12px rgba(229,9,20,0.4)"
                       }}>
-                      ▶ Découvrir les films
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Play size={16} fill="currentColor" /> Découvrir les films</span>
                     </motion.button>
                   </motion.div>
 
@@ -431,7 +432,7 @@ export default function Profile() {
                             <div className="fav-overlay">
                               {/* Rating */}
                               <div style={{ fontSize: 12, color: "#46d369", fontWeight: 700, marginBottom: 6 }}>
-                                ⭐ {movie.vote_average?.toFixed(1)} · {movie.release_date?.substring(0, 4)}
+                                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Star size={12} fill="currentColor" /> {movie.vote_average?.toFixed(1)} · {movie.release_date?.substring(0, 4)}</span>
                               </div>
                               {/* Title */}
                               <div style={{ fontSize: 13, fontWeight: 700, color: "white", lineHeight: 1.3, marginBottom: 10 }}>
@@ -439,13 +440,13 @@ export default function Profile() {
                               </div>
                               {/* Buttons */}
                               <button className="view-btn" onClick={() => navigate(`/movie/${movie.id}`)}>
-                                ▶ Voir
+                                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Play size={12} fill="currentColor" /> Voir</span>
                               </button>
                               <button
                                 className="remove-btn"
                                 onClick={() => removeFavorite(fav.id)}
                                 disabled={removingId === fav.id}>
-                                {removingId === fav.id ? "⏳..." : "✕ Retirer"}
+                                {removingId === fav.id ? "Suppression..." : <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Trash2 size={12} /> Retirer</span>}
                               </button>
                             </div>
                           </motion.div>
@@ -473,12 +474,12 @@ export default function Profile() {
                   gap: 16, marginBottom: 50
                 }}>
                   {[
-                    { label: "📽️ Films en liste", value: parsedFavorites.length, color: "#e50914" },
-                    { label: "⭐ Note moyenne", value: parsedFavorites.length > 0
+                    { label: "Films en liste", icon: Tv, value: parsedFavorites.length, color: "#e50914" },
+                    { label: "Note moyenne", icon: Star, value: parsedFavorites.length > 0
                         ? (parsedFavorites.reduce((acc, f) => acc + (f.parsed?.vote_average || 0), 0) / parsedFavorites.length).toFixed(1)
                         : "—", color: "#46d369" },
-                    { label: "🎬 Total vu", value: parsedFavorites.length, color: "#0ea5e9" },
-                    { label: "📅 Membre depuis", value: "2026", color: "#f59e0b" },
+                    { label: "Total vu", icon: Film, value: parsedFavorites.length, color: "#0ea5e9" },
+                    { label: "Membre depuis", icon: Calendar, value: "2026", color: "#f59e0b" },
                   ].map((stat, idx) => (
                     <motion.div
                       key={stat.label}
@@ -491,7 +492,7 @@ export default function Profile() {
                         borderRadius: 8, padding: "28px 24px"
                       }}>
                       <div style={{ fontSize: 13, color: "#b3b3b3", textTransform: "uppercase", letterSpacing: 1, marginBottom: 12, fontWeight: 600 }}>
-                        {stat.label}
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><stat.icon size={14} /> {stat.label}</span>
                       </div>
                       <div style={{ fontSize: 40, fontWeight: 900, color: stat.color, lineHeight: 1 }}>
                         {stat.value}
@@ -507,7 +508,7 @@ export default function Profile() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}>
                     <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, color: "white", letterSpacing: "-0.5px" }}>
-                      ✨ Ajouts récents
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Heart size={18} /> Ajouts récents</span>
                     </h2>
                     <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 12 }}>
                       {parsedFavorites.slice(0, 10).map((fav, idx) => {

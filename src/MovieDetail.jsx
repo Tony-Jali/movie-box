@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { createClient } from "@supabase/supabase-js";
+import { ArrowLeft, Heart, Info, Play, Star, User, Video, X } from "lucide-react";
 
 const TMDB_API_KEY = "20ee1557500e8089a6d549f19b23014e";
 const SUPABASE_URL = "https://zuriegsqtshtcyiytftg.supabase.co";
@@ -213,7 +214,7 @@ export default function MovieDetail() {
             }}
             onMouseEnter={e => e.target.style.background = "rgba(255,255,255,0.18)"}
             onMouseLeave={e => e.target.style.background = "rgba(255,255,255,0.1)"}>
-            ← Accueil
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><ArrowLeft size={14} /> Accueil</span>
           </button>
         </motion.nav>
 
@@ -257,8 +258,8 @@ export default function MovieDetail() {
               <span className="info-badge">{maturityRating}</span>
               <span className="info-badge">{movie.release_date?.substring(0, 4)}</span>
               {movie.runtime && <span className="info-badge">{Math.floor(movie.runtime / 60)}h {movie.runtime % 60}min</span>}
-              <span style={{ color: "#46d369", fontSize: 14, fontWeight: 700 }}>
-                ★ {movie.vote_average?.toFixed(1)}/10
+              <span style={{ color: "#46d369", fontSize: 14, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                <Star size={14} fill="currentColor" /> {movie.vote_average?.toFixed(1)}/10
               </span>
             </div>
 
@@ -281,13 +282,13 @@ export default function MovieDetail() {
             {/* Action Buttons */}
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
               <button className="detail-btn-primary">
-                <span>▶</span> Lecture
+                <Play size={18} fill="currentColor" /> Lecture
               </button>
               {trailers.length > 0 ? (
                 <button 
                   className="detail-btn-secondary"
                   onClick={() => setPlayingTrailer(trailers[0])}>
-                  <span>🎬</span> Bande-annonce
+                  <Video size={18} /> Bande-annonce
                 </button>
               ) : (
                 <div style={{
@@ -295,14 +296,14 @@ export default function MovieDetail() {
                   background: "rgba(229,9,20,0.2)", border: "1px solid rgba(229,9,20,0.5)",
                   color: "#ff9999", fontSize: 13, fontWeight: 600
                 }}>
-                  ⓘ Aucune bande-annonce disponible
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Info size={14} /> Aucune bande-annonce disponible</span>
                 </div>
               )}
               <button
                 className={`detail-btn-fav ${isFavorite ? "active" : ""}`}
                 onClick={handleAddFavorite}
                 disabled={addingFavorite || isFavorite}>
-                <span style={{ fontSize: 20 }}>{isFavorite ? "❤" : "+"}</span>
+                <span style={{ display: "inline-flex", alignItems: "center" }}>{isFavorite ? <Heart size={20} fill="currentColor" /> : <Heart size={20} />}</span>
                 {isFavorite ? "Dans ma liste" : "Ma liste"}
               </button>
             </div>
@@ -365,8 +366,8 @@ export default function MovieDetail() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16, minWidth: 200 }}>
               <div className="stat-card">
                 <div style={{ fontSize: 12, color: "#757575", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Note</div>
-                <div style={{ fontSize: 22, fontWeight: 700, color: "#46d369" }}>
-                  ★ {movie.vote_average?.toFixed(1)}
+                <div style={{ fontSize: 22, fontWeight: 700, color: "#46d369", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Star size={20} fill="currentColor" /> {movie.vote_average?.toFixed(1)}
                 </div>
                 <div style={{ fontSize: 12, color: "#757575" }}>{movie.vote_count?.toLocaleString()} votes</div>
               </div>
@@ -446,7 +447,7 @@ export default function MovieDetail() {
                           width: "100%", height: "100%",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           fontSize: 28, color: "#757575"
-                        }}>👤</div>
+                        }}><User size={28} /></div>
                       )}
                     </div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "white", lineHeight: 1.3, marginBottom: 2 }}>
@@ -565,7 +566,7 @@ export default function MovieDetail() {
                   background: "none", border: "none", color: "white",
                   fontSize: 32, cursor: "pointer", fontWeight: "bold"
                 }}>
-                ✕
+                <X size={28} />
               </button>
               <div style={{
                 position: "relative", paddingBottom: "56.25%", height: 0,
