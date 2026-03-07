@@ -16,6 +16,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/movie/:movieId" element={<MovieDetail />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
