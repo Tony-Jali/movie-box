@@ -104,6 +104,7 @@ export default function MovieDetail() {
   const [playingTrailer, setPlayingTrailer] = useState(null);
   const [avodProviders, setAvodProviders] = useState([]);
   const [avodLink, setAvodLink] = useState("");
+  const [archiveItem, setArchiveItem] = useState(null);
   const userId = localStorage.getItem("moviebox_user_id");
   const username = localStorage.getItem("moviebox_username");
   const user = userId && username ? { id: userId, username } : null;
@@ -144,6 +145,24 @@ export default function MovieDetail() {
         );
         setAvodProviders(uniqueProviders);
         setAvodLink(region?.link || "");
+
+        const archiveTitle = movieRes.data?.title || movieRes.data?.original_title || "";
+        if (archiveTitle) {
+          const archiveRes = await axios.get("https://archive.org/advancedsearch.php", {
+            params: {
+              q: `title:("${archiveTitle.replace(/"/g, "")}") AND mediatype:(movies)`,
+              "fl[]": ["identifier", "title", "downloads"],
+              "sort[]": "downloads desc",
+              rows: 1,
+              page: 1,
+              output: "json"
+            }
+          });
+          const firstDoc = archiveRes.data?.response?.docs?.[0] || null;
+          setArchiveItem(firstDoc);
+        } else {
+          setArchiveItem(null);
+        }
       } catch (err) {
         console.error("Erreur:", err);
       }
@@ -375,6 +394,61 @@ export default function MovieDetail() {
               ) : (
                 <div style={{ fontSize: 12, color: "#999" }}>
                   Aucune option AVOD gratuite trouvÃ©e pour le moment.
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginTop: 16 }}>
+              <p style={{ fontSize: 13, color: "#b3b3b3", marginBottom: 10 }}>
+                Lecture gratuite intÃ©grÃ©e (Internet Archive)
+              </p>
+              {archiveItem?.identifier ? (
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: 8,
+                    overflow: "hidden"
+                  }}>
+                  <div style={{ padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                    <span style={{ fontSize: 12, color: "#e5e5e5" }}>
+                      {archiveItem.title || archiveItem.identifier}
+                    </span>
+                    <button
+                      onClick={() => window.open(`https://archive.org/details/${archiveItem.identifier}`, "_blank", "noopener,noreferrer")}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "6px 10px",
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid rgba(255,255,255,0.15)",
+                        color: "white",
+                        borderRadius: 6,
+                        cursor: "pointer",
+                        fontSize: 12
+                      }}>
+                      <ExternalLink size={13} /> Ouvrir sur Archive
+                    </button>
+                  </div>
+                  <div style={{ position: "relative", paddingBottom: "56.25%", height: 0 }}>
+                    <iframe
+                      src={`https://archive.org/embed/${archiveItem.identifier}`}
+                      title="Internet Archive Player"
+                      allowFullScreen
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        border: "none"
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div style={{ fontSize: 12, color: "#999" }}>
+                  Aucune source Archive trouvÃ©e automatiquement pour ce titre.
                 </div>
               )}
             </div>
