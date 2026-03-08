@@ -102,6 +102,7 @@ export default function MovieDetail() {
   const [addingFavorite, setAddingFavorite] = useState(false);
   const [trailers, setTrailers] = useState([]);
   const [playingTrailer, setPlayingTrailer] = useState(null);
+  const [playingArchive, setPlayingArchive] = useState(false);
   const [avodProviders, setAvodProviders] = useState([]);
   const [avodLink, setAvodLink] = useState("");
   const [archiveItem, setArchiveItem] = useState(null);
@@ -183,6 +184,18 @@ export default function MovieDetail() {
       else alert(`Erreur: ${error.message}`);
     } catch (err) { alert(`Erreur: ${err.message}`); }
     setAddingFavorite(false);
+  };
+
+  const handleWatchNow = () => {
+    if (archiveItem?.identifier) {
+      setPlayingArchive(true);
+      return;
+    }
+    if (avodLink) {
+      window.open(avodLink, "_blank", "noopener,noreferrer");
+      return;
+    }
+    alert("Aucune source de lecture disponible pour ce titre.");
   };
 
   // ── LOADING ──
@@ -316,7 +329,7 @@ export default function MovieDetail() {
 
             {/* Action Buttons */}
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-              <button className="detail-btn-primary">
+              <button className="detail-btn-primary" onClick={handleWatchNow}>
                 <Play size={18} fill="currentColor" /> Lecture
               </button>
               {trailers.length > 0 ? (
@@ -725,6 +738,51 @@ export default function MovieDetail() {
                   src={`https://www.youtube.com/embed/${playingTrailer.key}?autoplay=1`}
                   allowFullScreen
                   title="Film Trailer"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {playingArchive && archiveItem?.identifier && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onClick={() => setPlayingArchive(false)}
+            style={{
+              position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 2000, cursor: "pointer"
+            }}>
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                position: "relative", width: "90%", maxWidth: 980,
+                cursor: "default"
+              }}>
+              <button
+                onClick={() => setPlayingArchive(false)}
+                style={{
+                  position: "absolute", top: -40, right: 0,
+                  background: "none", border: "none", color: "white",
+                  fontSize: 32, cursor: "pointer", fontWeight: "bold"
+                }}>
+                <X size={28} />
+              </button>
+              <div style={{
+                position: "relative", paddingBottom: "56.25%", height: 0,
+                overflow: "hidden", borderRadius: 8
+              }}>
+                <iframe
+                  src={`https://archive.org/embed/${archiveItem.identifier}`}
+                  title="Internet Archive Full Movie"
+                  allowFullScreen
+                  style={{
+                    position: "absolute", top: 0, left: 0,
+                    width: "100%", height: "100%", border: "none"
+                  }}
                 />
               </div>
             </motion.div>
