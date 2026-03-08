@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { createClient } from "@supabase/supabase-js";
-import { ArrowLeft, Heart, Info, Play, Star, User, Video, X } from "lucide-react";
+import { ArrowLeft, ExternalLink, Heart, Info, Play, Star, User, Video, X } from "lucide-react";
 
 const TMDB_API_KEY = "20ee1557500e8089a6d549f19b23014e";
 const SUPABASE_URL = "https://zuriegsqtshtcyiytftg.supabase.co";
@@ -12,6 +12,8 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const IMG = "https://image.tmdb.org/t/p/original";
 const IMG_W = "https://image.tmdb.org/t/p/w500";
+const PROVIDER_LOGO = "https://image.tmdb.org/t/p/w92";
+const COUNTRY_PRIORITY = ["FR", "US"];
 
 const styles = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -100,6 +102,8 @@ export default function MovieDetail() {
   const [addingFavorite, setAddingFavorite] = useState(false);
   const [trailers, setTrailers] = useState([]);
   const [playingTrailer, setPlayingTrailer] = useState(null);
+  const [avodProviders, setAvodProviders] = useState([]);
+  const [avodLink, setAvodLink] = useState("");
   const userId = localStorage.getItem("moviebox_user_id");
   const username = localStorage.getItem("moviebox_username");
   const user = userId && username ? { id: userId, username } : null;
@@ -128,6 +132,18 @@ export default function MovieDetail() {
         const otherYT = allVideos.filter(v => v.site === "YouTube");
         const trailerList = trailers.length > 0 ? trailers : (teasers.length > 0 ? teasers : otherYT);
         setTrailers(trailerList);
+
+        const watchRes = await axios.get(
+          `https://api.themoviedb.org/3/movie/${movieId}/watch/providers?api_key=${TMDB_API_KEY}`
+        );
+        const regionResults = watchRes.data?.results || {};
+        const region = COUNTRY_PRIORITY.map((code) => regionResults[code]).find(Boolean);
+        const freeProviders = region ? [...(region.free || []), ...(region.ads || [])] : [];
+        const uniqueProviders = freeProviders.filter(
+          (provider, idx, arr) => arr.findIndex((p) => p.provider_id === provider.provider_id) === idx
+        );
+        setAvodProviders(uniqueProviders);
+        setAvodLink(region?.link || "");
       } catch (err) {
         console.error("Erreur:", err);
       }
@@ -306,6 +322,61 @@ export default function MovieDetail() {
                 <span style={{ display: "inline-flex", alignItems: "center" }}>{isFavorite ? <Heart size={20} fill="currentColor" /> : <Heart size={20} />}</span>
                 {isFavorite ? "Dans ma liste" : "Ma liste"}
               </button>
+            </div>
+
+            <div style={{ marginTop: 16 }}>
+              <p style={{ fontSize: 13, color: "#b3b3b3", marginBottom: 10 }}>
+                Regarder gratuitement (AVOD, avec publicitÃ©)
+              </p>
+              {avodProviders.length > 0 ? (
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                  {avodProviders.map((provider) => (
+                    <div
+                      key={provider.provider_id}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: "6px 10px",
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid rgba(255,255,255,0.12)",
+                        borderRadius: 6
+                      }}>
+                      {provider.logo_path && (
+                        <img
+                          src={`${PROVIDER_LOGO}${provider.logo_path}`}
+                          alt={provider.provider_name}
+                          style={{ width: 24, height: 24, borderRadius: 4, objectFit: "cover" }}
+                        />
+                      )}
+                      <span style={{ fontSize: 12, color: "#e5e5e5" }}>{provider.provider_name}</span>
+                    </div>
+                  ))}
+                  {avodLink && (
+                    <button
+                      onClick={() => window.open(avodLink, "_blank", "noopener,noreferrer")}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "8px 12px",
+                        background: "rgba(229,9,20,0.2)",
+                        border: "1px solid rgba(229,9,20,0.45)",
+                        color: "white",
+                        borderRadius: 6,
+                        cursor: "pointer",
+                        fontSize: 12,
+                        fontWeight: 600
+                      }}>
+                      <ExternalLink size={14} /> Ouvrir les options AVOD
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div style={{ fontSize: 12, color: "#999" }}>
+                  Aucune option AVOD gratuite trouvÃ©e pour le moment.
+                </div>
+              )}
             </div>
           </motion.div>
         </motion.div>
